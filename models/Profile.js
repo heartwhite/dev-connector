@@ -23,10 +23,10 @@ const ProfileSchema = new mongoose.Schema({
     required: true,
   },
   bio: {
-    type: [String],
+    type: String,
   },
   githubusername: {
-    type: [String],
+    type: String,
   },
   experience: [
     {
@@ -103,10 +103,10 @@ const ProfileSchema = new mongoose.Schema({
     instagram: {
       type: String,
     },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
+  },
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 
