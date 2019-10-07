@@ -1,33 +1,33 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import { setAlert } from '../../actions/action-set-alert';
-import { Link } from 'react-router-dom';
-import { SET_ALERT } from '../../actions/action-types';
+import { register } from '../../actions/action-auth';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    password2: ''
+    password2: '',
   });
 
   const { name, email, password, password2 } = formData;
 
-  const onChange = e =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async e => {
     e.preventDefault();
     if (password !== password2) {
-      setAlert('passwords dont match', 'danger', 3000);
+      setAlert("passwords don't match", 'danger', 3000);
     } else {
-      console.log('SUCCESS');
+      register({ name, email, password });
     }
   };
-
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
   return (
     <Fragment>
       <h1 className='large text-primary'>Sign Up</h1>
@@ -55,8 +55,7 @@ const Register = ({ setAlert }) => {
             required
           />
           <small className='form-text'>
-            This site uses Gravatar so if you want a profile image, use a
-            Gravatar email
+            This site uses Gravatar so if you want a profile image, use a Gravatar email
           </small>
         </div>
         <div className='form-group'>
@@ -88,9 +87,15 @@ const Register = ({ setAlert }) => {
   );
 };
 
-Register.propTypes = { setAlert: PropTypes.func.isRequired };
-
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+};
+const mapStateToProps = state => ({
+  isAuthenticated: state.register.isAuthenticated,
+});
 export default connect(
-  null,
-  { setAlert }
+  mapStateToProps,
+  { setAlert, register },
 )(Register);
