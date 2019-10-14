@@ -46,10 +46,17 @@ export const getProfileById = userId => async dispatch => {
     const res = await axios.get(`/api/profile/user/${userId}`);
     dispatch({ type: GET_PROFILE, payload: res.data });
   } catch (err) {
-    dispatch({
-      type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
-    });
+    if (err.response) {
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status },
+      });
+    } else {
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: { msg: 'unknown error' },
+      });
+    }
   }
 };
 

@@ -22,6 +22,13 @@ const Login = ({ login, isAuthenticated }) => {
   if (isAuthenticated) {
     return <Redirect to='/dashboard' />;
   }
+  function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+  }
   return (
     <Fragment>
       <h1 className='large text-primary'>Sign In</h1>
@@ -52,6 +59,7 @@ const Login = ({ login, isAuthenticated }) => {
 
         <input type='submit' className='btn btn-primary' value='Login' />
       </form>
+      <div class='g-signin2' data-onsuccess='onSignIn' onClick={onSignIn}></div>
       <p className='my-1'>
         Don't have an account? <Link to='/register'>Sign Up</Link>
       </p>
